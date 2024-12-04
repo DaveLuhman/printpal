@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/_head.ejs') %>
+  <body>
+<%- include('partials/_header.ejs') %>
+    <main role="main">
+      <div class="container mt-5">
+        <h2>Submit 3D Printing Request</h2>
+        <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+          <div class="alert alert-danger">
+            <ul>
+              <% errors.forEach(function(error) { %>
+                <li><%= error %></li>
+              <% }); %>
+            </ul>
+          </div>
+        <% } %>
+        <div id="error-msg" class="alert alert-danger" style="display: none;"></div> <!-- Added error message div -->
+        <form action="/requests/submit" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="userId" value="<%= user ? user._id : '' %>">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="name" id="name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" id="email" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="modelSource" class="form-label">Model Source Link</label>
+            <input type="url" name="modelSource" id="modelSource" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="primaryColor" class="form-label">Primary Color</label>
+            <input type="color" name="primaryColor" id="primaryColor" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="secondaryColor" class="form-label">Secondary Color</label>
+            <input type="color" name="secondaryColor" id="secondaryColor" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="accentColor" class="form-label">Accent Color</label>
+            <input type="color" name="accentColor" id="accentColor" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="modelFile" class="form-label">Upload Model File</label>
+            <input type="file" name="modelFile" id="modelFile" class="form-control" accept=".stl,.3mf,.step,.obj">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </form>
+      </div>
+    </main>
+    <script src="/js/main.js"></script>
+  </body>
+<%- include('partials/_footer.ejs') %>
+</html>

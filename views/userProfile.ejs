@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/_head') %>
+  <title>User Profile</title>
+</head>
+<body>
+  <%- include('partials/_header') %>
+  <div class="container mt-5">
+    <h1>User Profile</h1>
+    <p><strong>Username:</strong> <%= user.username %></p>
+    <p><strong>Permalink:</strong> <a href="/requests/new/<%= user.permalink %>"><%= user.permalink %></a></p>
+    <p>Use the above link to submit 3D printing requests specifically to this user.</p>
+    <!-- Add more user-specific information as needed -->
+  </div>
+  <%- include('partials/_footer') %>
+</body>
+</html>

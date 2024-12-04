@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/_head.ejs') %>
+<body>
+<%- include('partials/_header.ejs') %>
+<main role="main" class="container mt-4">
+  <h1>Kanban Board</h1>
+  <div class="row">
+    <% ['New', 'Accepted', 'In-progress', 'Finishing', 'Completed', 'Delivered', 'Rejected'].forEach(status => { %>
+      <div class="col-md-3">
+        <h2><%= status %></h2>
+        <div class="kanban-lane <%= status %>" id="<%= status %>" data-status="<%= status %>">
+          <% lanes[status].forEach(request => { %>
+            <div class="kanban-card" data-request-id="<%= request._id %>">
+              <h5><%= request.name %></h5>
+              <p><%= request.email %></p>
+              <p><%= request.modelSource %></p>
+              <p>Primary Color: <span style="background-color: <%= request.primaryColor %>;">&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+              <p>Secondary Color: <span style="background-color: <%= request.secondaryColor %>;">&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+              <p>Accent Color: <span style="background-color: <%= request.accentColor %>;">&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+              <p>Status: <span class="status-text"><%= request.status %></span></p>
+              <!-- Info Icon for Status Change History -->
+              <span class="info-icon" data-request-id="<%= request._id %>">ℹ️</span>
+              <div class="tooltip" id="tooltip-<%= request._id %>">
+                <% request.statusChangeThreads.forEach(thread => { %>
+                  <p><%= thread.status %> at <%= thread.timestamp.toLocaleString() %></p>
+                <% }) %>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</main>
+<%- include('partials/_footer.ejs') %>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const lanes = document.querySelectorAll('.kanban-lane');
+
+    lanes.forEach(lane => {
+      new Sortable(lane, {
+        group: 'kanban',
+        animation: 150,
+        onEnd: async (evt) => {
+          const requestId = evt.item.getAttribute('data-request-id');
+          const newStatus = evt.to.getAttribute('data-status');
+          const statusTextElement = evt.item.querySelector('.status-text');
+
+          try {
+            const response = await fetch('/kanban/update-status', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ requestId, newStatus })
+            });
+
+            if (!response.ok) {
+              throw new Error('Failed to update status');
+            }
+
+            // Update the status text if the update was successful
+            statusTextElement.textContent = newStatus;
+          } catch (error) {
+            console.error('Error updating status:', error);
+            // Optionally, revert the card position or show an error message
+            evt.from.appendChild(evt.item);
+          }
+        }
+      });
+    });
+
+    // Initialize socket.io client
+    const socket = io();
+
+    // Listen for status updates
+    socket.on('statusUpdated', ({ requestId, newStatus, userId }) => {
+      const card = document.querySelector(`.kanban-card[data-request-id="${requestId}"]`);
+      if (card) {
+        const currentLane = card.parentElement;
+        const newLane = document.querySelector(`.kanban-lane[data-status="${newStatus}"]`);
+
+        if (currentLane && newLane) {
+          currentLane.removeChild(card);
+          newLane.appendChild(card);
+          card.querySelector('.status-text').textContent = newStatus;
+        }
+      }
+    });
+
+    // Tooltip logic
+    const infoIcons = document.querySelectorAll('.info-icon');
+    infoIcons.forEach(icon => {
+      icon.addEventListener('mouseover', (e) => {
+        const requestId = e.target.getAttribute('data-request-id');
+        const tooltip = document.getElementById(`tooltip-${requestId}`);
+        tooltip.style.display = 'block';
+      });
+
+      icon.addEventListener('mouseout', (e) => {
+        const requestId = e.target.getAttribute('data-request-id');
+        const tooltip = document.getElementById(`tooltip-${requestId}`);
+        tooltip.style.display = 'none';
+      });
+    });
+  });
+</script>
+</body>
+</html>

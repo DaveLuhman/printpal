@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/_head.ejs') %>
+  <body>
+<%- include('partials/_header.ejs') %>
+    <main role="main">
+      <div class="container mt-5">
+        <h2>Request Submitted Successfully</h2>
+        <p>Thank you for your submission. Your 3D printing request has been received and is being processed.</p>
+        <h3>Request Details:</h3>
+        <ul>
+          <li><strong>Name:</strong> <%= request.name %></li>
+          <li><strong>Email:</strong> <%= request.email %></li>
+          <li><strong>Model Source:</strong> <%= request.modelSource %></li>
+          <li><strong>Primary Color:</strong> <span style="background-color: <%= request.primaryColor %>;">&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+          <li><strong>Secondary Color:</strong> <span style="background-color: <%= request.secondaryColor %>;">&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+          <li><strong>Accent Color:</strong> <span style="background-color: <%= request.accentColor %>;">&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+          <li><strong>Model File:</strong> <%= request.modelFile %></li>
+        </ul>
+        <a href="/" class="btn btn-primary">Go to Home</a>
+      </div>
+    </main>
+<%- include('partials/_footer.ejs') %>
+  </body>
+</html>

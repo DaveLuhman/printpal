@@ -1,0 +1,101 @@
+/* Placeholder for custom styles */
+body {
+    padding-bottom: 60px;
+}
+
+footer {
+    height: 40px;
+}
+
+nav.navbar {
+    padding: 10px 20px;
+}
+
+.pythagora-logo {
+    height: 20px;
+    margin-left: 5px;
+}
+
+/* Kanban Board Styles */
+.kanban-lane {
+    border: 1px solid #ccc;
+    min-height: 200px;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.kanban-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.kanban-lane:empty::before {
+    content: "Drop here";
+    display: block;
+    color: #ccc;
+    text-align: center;
+    padding: 20px;
+}
+
+.kanban-lane.New {
+  background-color: #d1e7dd;
+}
+
+.kanban-lane.Accepted {
+  background-color: #cff4fc;
+}
+
+.kanban-lane['In-progress'] {
+  background-color: #e2e3e5;
+}
+
+.kanban-lane.Finishing {
+  background-color: #fff3cd;
+}
+
+.kanban-lane.Completed {
+  background-color: #d4edda;
+}
+
+.kanban-lane.Delivered {
+  background-color: #cce5ff;
+}
+
+.kanban-lane.Rejected {
+  background-color: #f8d7da;
+  opacity: 0.75;
+}
+
+/* Tooltip Styles */
+.info-icon {
+  cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 3px;
+  z-index: 10;
+  width: 200px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.tooltip p {
+  margin: 0;
+  font-size: 12px;
+}
